@@ -19,7 +19,7 @@ namespace CppMenu
 
             Menu (const Menu&) = delete;
             Menu& operator=(const Menu&) = delete; 
-            Menu(const std::string& title, const std::vector<Function>& menuFunctions, const std::string& exitMessage = "GO BACK");
+            Menu(const std::string& title, const std::vector<Function>& menuFunctions, const std::string& exitMessage);
             
             virtual void run() const = 0;
             static void setMaxWidth(std::size_t width);     
@@ -38,6 +38,8 @@ namespace CppMenu
              
             static void print(const std::string& string);
             static void printBreak();
+
+            std::size_t getIndexFromUser() const;
             
             void printTitle() const;
             void display() const;
@@ -47,7 +49,7 @@ namespace CppMenu
     class MainMenu : public Menu 
     {
         public:
-            MainMenu(const std::string& title, const std::vector<Function>& menuFunctions) : Menu(title, menuFunctions) {};
+            MainMenu(const std::string& title, const std::vector<Function>& menuFunctions);
             void run() const;
     };
 
