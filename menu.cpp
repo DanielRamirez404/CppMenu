@@ -28,8 +28,8 @@ void CppMenu::Menu::print(const std::string& string)
         std::cout << string << '\n';
     else 
     {
-        print(string.substr(0, s_maxWidth));
-        print(string.substr(s_maxWidth));
+        print(string.substr(0, s_maxWidth - 1));
+        print(string.substr(s_maxWidth - 1));
     }
 }
 
@@ -80,7 +80,8 @@ std::size_t CppMenu::Menu::getIndexFromUser() const
         display();
 
         print("An error happened handling your input.");
-        print(std::string{ "Error: " } std::string{ exception.what() });
+        printBreak();
+        print(std::string{ "Error: " } + std::string{ exception.what() });
         
         printBreak();
         print("Please, try again.");
