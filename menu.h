@@ -8,7 +8,6 @@ namespace CppMenu
 
     class Menu 
     {
-
         public:
         
             struct Function
@@ -16,22 +15,25 @@ namespace CppMenu
                 std::string name{};
                 std::function<void()> function{};
             };
-
-            Menu (const Menu&) = delete;
-            Menu& operator=(const Menu&) = delete; 
-            Menu(const std::string& title, const std::vector<Function>& menuFunctions, const std::string& exitMessage);
             
-            virtual void run() const = 0;
-            static void setMaxWidth(std::size_t width);     
+            static void setMaxWidth(std::size_t width);
+
+            using Items = std::vector<Function>;
 
         protected:
 
+            Menu(const std::string& title, const Items& items, const std::string& exitMessage);
+            Menu (const Menu&) = delete;
+            Menu& operator=(const Menu&) = delete; 
+        
+            virtual void run() const = 0;
+            
             static std::size_t s_maxWidth;
 
             std::string m_title{};
             std::string m_exitMessage{};
             
-            std::vector<Function> m_menuFunctions{};
+            Items m_items{};
             
             bool isUserQuitting(size_t selectedOption) const;
             bool isQuittingConfirmed() const;
@@ -46,19 +48,18 @@ namespace CppMenu
   
     };
 
-    class MainMenu : public Menu 
+    class CommonMenu : public Menu 
     {
         public:
-            MainMenu(const std::string& title, const std::vector<Function>& menuFunctions);
+            CommonMenu(const std::string& title, const Items& items, bool isMainMenu = false);
             void run() const;
     };
 
     class DisplayOnceMenu : public Menu 
     {
         public:
-            DisplayOnceMenu(const std::string& title, const std::vector<Function>& menuFunctions);
+            DisplayOnceMenu(const std::string& title, const Items& items);
             void run() const;
     };
-  
 }
 

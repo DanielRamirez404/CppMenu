@@ -1,21 +1,20 @@
 #include "menu.h"
-#include "cpp-safe-io.h"
+#include "cppsafeio.h"
 #include <iostream>
 #include <string>
-#include <vector>
 #include <cstddef>
 #include <exception>
 
 std::size_t CppMenu::Menu::s_maxWidth = 50;
 
-CppMenu::Menu::Menu(const std::string& title, const std::vector<Menu::Function>& menuFunctions, const std::string& exitMessage)
-    : m_title{ title }, m_menuFunctions{ menuFunctions }, m_exitMessage{ exitMessage } {}
+CppMenu::Menu::Menu(const std::string& title, const Menu::Items& items, const std::string& exitMessage)
+    : m_title{ title }, m_items{ items }, m_exitMessage{ exitMessage } {}
 
-CppMenu::MainMenu::MainMenu(const std::string& title, const std::vector<Menu::Function>& menuFunctions) 
-    : CppMenu::Menu::Menu(title, menuFunctions, "GO BACK") {}
+CppMenu::CommonMenu::CommonMenu(const std::string& title, const Menu::Items& items, bool isMainMenu) 
+    : CppMenu::Menu::Menu(title, items, (isMainMenu) ? "EXIT" : "GO BACK") {}
 
-CppMenu::DisplayOnceMenu::DisplayOnceMenu(const std::string& title, const std::vector<Menu::Function>& menuFunctions) 
-    : CppMenu::Menu::Menu(title, menuFunctions, "EXIT") {}
+CppMenu::DisplayOnceMenu::DisplayOnceMenu(const std::string& title, const Menu::Items& items) 
+    : CppMenu::Menu::Menu(title, items, "EXIT") {}
 
 void CppMenu::Menu::setMaxWidth(std::size_t width)
 {
@@ -71,7 +70,7 @@ std::size_t CppMenu::Menu::getIndexFromUser() const
         std::cout << "Input: ";
         index = CppSafeIO::getInput<std::size_t>();
         
-        if (index == 0 || index > m_menuFunctions.size() + 1 )
+        if (index == 0 || index > m_items.size() + 1 )
             throw std::runtime_error{ "Invalid Index" };
     }
     catch (const std::exception& exception)
@@ -97,14 +96,14 @@ void CppMenu::Menu::display() const
 {
     printTitle();
     
-    for (std::size_t i{0}; i < m_menuFunctions.size(); ++i)
-        print(std::to_string(i + 1).append(") ").append(m_menuFunctions[i].name));
+    for (std::size_t i{0}; i < m_items.size(); ++i)
+        print(std::to_string(i + 1).append(") ").append(m_items[i].name));
         
-    print(std::to_string(m_menuFunctions.size() + 1).append(") ").append(m_exitMessage));
+    print(std::to_string(m_items.size() + 1).append(") ").append(m_exitMessage));
     printBreak();
 }
 
-void CppMenu::MainMenu::run() const
+void CppMenu::CommonMenu::run() const
 {
     display();
     auto index{ getIndexFromUser() };
