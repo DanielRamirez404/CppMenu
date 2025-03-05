@@ -25,27 +25,26 @@ namespace CppMenu
             Menu(const std::string& title, const Items& items, const std::string& exitMessage);
             Menu (const Menu&) = delete;
             Menu& operator=(const Menu&) = delete; 
-        
-            virtual void run() const = 0;
             
             static std::size_t s_maxWidth;
 
             std::string m_title{};
             std::string m_exitMessage{};
-            
             Items m_items{};
+            
+            virtual void run() const = 0;
+
+            static void print(const std::string& string);
+            static void printBreak();
+            static void centerPrint(const std::string& string); 
+
+            void printTitle() const;
+            void display() const;
             
             bool isUserQuitting(size_t selectedOption) const;
             bool isQuittingConfirmed() const;
-             
-            static void print(const std::string& string);
-            static void printBreak();
-
-            std::size_t getIndexFromUser() const;
             
-            void printTitle() const;
-            void display() const;
-  
+            std::size_t getIndexFromUser() const;
     };
 
     class CommonMenu : public Menu 

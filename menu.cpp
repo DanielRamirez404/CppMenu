@@ -40,24 +40,31 @@ void CppMenu::Menu::printBreak()
     std::cout << '\n';
 }
 
-void CppMenu::Menu::printTitle() const
+void CppMenu::Menu::centerPrint(const std::string& string)
 {
-    const std::size_t halfWidth{ s_maxWidth / 2 };
-    const std::size_t titleSize { m_title.size() };
-    const std::size_t halfTitleSize{ titleSize / 2 };
+    const std::size_t stringSize { string.size() };
 
-    printBreak();
-
-    if (m_title.size() < s_maxWidth)
+    if (stringSize < s_maxWidth)
     {
-        for (std::size_t i{ 0 }; i < (halfWidth - halfTitleSize); ++i)
+        const std::size_t halfWidth{ s_maxWidth / 2 };
+        const std::size_t halfStringSize{ stringSize / 2 };
+
+        for (std::size_t i{ 0 }; i < (halfWidth - halfStringSize); ++i)
             std::cout << ' ';
 
-        std::cout << m_title << '\n';
+        std::cout << string << '\n';
     }
     else
-        print(m_title);
+    {
+        centerPrint(string.substr(0, s_maxWidth - 1));
+        centerPrint(string.substr(s_maxWidth - 1));
+    }
+}
 
+void CppMenu::Menu::printTitle() const
+{
+    printBreak();
+    centerPrint(m_title);
     printBreak();
 }
 
