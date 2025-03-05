@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "cppsafeio.h"
+#include <functional>
 #include <iostream>
 #include <string>
 #include <cstddef>
@@ -80,62 +81,48 @@ void CppMenu::Menu::display() const
     printBreak();
 }
 
-std::size_t CppMenu::Menu::getIndexFromUser() const
+void CppMenu::Menu::displayWithInputError(const std::exception& exception) const
 {
-    std::size_t index{ 0 };
+    display();
 
-    try 
-    {
-        std::cout << "Input: ";
-        index = CppSafeIO::getInput<std::size_t>();
-        
-        if (index == 0 || index > m_items.size() + 1 )
-            throw std::runtime_error{ "Invalid Index" };
-    }
-    catch (const std::exception& exception)
-    {
-        display();
+    print("An error happened handling your input.");
+    printBreak();
+    print(std::string{ "Error: " } + std::string{ exception.what() });
+    
+    printBreak();
+    print("Please, try again.");
+    printBreak();
+}
 
-        print("An error happened handling your input.");
-        printBreak();
-        print(std::string{ "Error: " } + std::string{ exception.what() });
-        
-        printBreak();
-        print("Please, try again.");
-        printBreak();
 
-        return getIndexFromUser();
-    }
+std::size_t CppMenu::Menu::getIndexFromUser() const
+{   
+    return handleInput<std::size_t>([&]()
+        {
+            std::cout << "Input: ";
+            std::size_t index{ CppSafeIO::getInput<std::size_t>() };
+            
+            if (index == 0 || index > m_items.size() + 1 )
+                throw std::runtime_error{ "Invalid Index" };
 
-    return --index;
+            return --index;
+        }
+    );
+}
+
+bool CppMenu::Menu::isUserQuitting() const
+{
+    return handleInput<bool>([&]()
+        {
+            std::cout << "Do you want to exit? (y/n): ";
+            return CppSafeIO::parseYesNoInput();
+        }
+    );
 }
 
 bool CppMenu::Menu::isQuitting(size_t selectedOption) const
 {
     return selectedOption == m_items.size();
-}
-
-bool CppMenu::Menu::isUserQuitting() const
-{
-    try 
-    {
-        std::cout << "Do you want to exit? (y/n): ";
-        return CppSafeIO::parseYesNoInput();
-    }
-    catch (const std::exception& exception)
-    {
-        display();
-
-        print("An error happened handling your input.");
-        printBreak();
-        print(std::string{ "Error: " } + std::string{ exception.what() });
-        
-        printBreak();
-        print("Please, try again.");
-        printBreak();
-    }
-
-    return isUserQuitting();
 }
 
 void CppMenu::CommonMenu::run() const

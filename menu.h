@@ -2,6 +2,7 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include <exception>
 
 namespace CppMenu
 {
@@ -36,7 +37,7 @@ namespace CppMenu
             static void print(const std::string& string);
             static void printBreak();
             static void centerPrint(const std::string& string); 
-
+            
             void printTitle() const;
             void display() const;
             
@@ -44,7 +45,34 @@ namespace CppMenu
             bool isUserQuitting() const;
             
             std::size_t getIndexFromUser() const;
+
+        private:
+
+            void displayWithInputError(const std::exception& exception) const;
+            template<typename T> T handleInput(std::function<T()> inputHandler) const;
     };
+    
+    template<typename T> T CppMenu::Menu::handleInput(std::function<T()> inputHandler) const
+    {
+        display();
+
+        T value{};
+        
+        while (true)
+        {
+            try 
+            {
+                value = inputHandler();
+                break;
+            }
+            catch (const std::exception& exception)
+            {
+                displayWithInputError(exception);
+            }
+        }
+        
+        return value;
+    }
 
     class CommonMenu : public Menu 
     {
