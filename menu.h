@@ -5,7 +5,6 @@
 
 namespace CppMenu
 {
-
     class Menu 
     {
         public:
@@ -41,8 +40,8 @@ namespace CppMenu
             void printTitle() const;
             void display() const;
             
-            bool isUserQuitting(size_t selectedOption) const;
-            bool isQuittingConfirmed() const;
+            bool isQuitting(size_t selectedOption) const;
+            bool isUserQuitting() const;
             
             std::size_t getIndexFromUser() const;
     };

@@ -68,6 +68,18 @@ void CppMenu::Menu::printTitle() const
     printBreak();
 }
 
+void CppMenu::Menu::display() const
+{
+    CppSafeIO::clearConsole();
+    printTitle();
+    
+    for (std::size_t i{0}; i < m_items.size(); ++i)
+        print(std::to_string(i + 1).append(") ").append(m_items[i].name));
+        
+    print(std::to_string(m_items.size() + 1).append(") ").append(m_exitMessage));
+    printBreak();
+}
+
 std::size_t CppMenu::Menu::getIndexFromUser() const
 {
     std::size_t index{ 0 };
@@ -82,7 +94,6 @@ std::size_t CppMenu::Menu::getIndexFromUser() const
     }
     catch (const std::exception& exception)
     {
-        CppSafeIO::clearConsole();
         display();
 
         print("An error happened handling your input.");
@@ -99,21 +110,50 @@ std::size_t CppMenu::Menu::getIndexFromUser() const
     return --index;
 }
 
-void CppMenu::Menu::display() const
+bool CppMenu::Menu::isQuitting(size_t selectedOption) const
 {
-    printTitle();
-    
-    for (std::size_t i{0}; i < m_items.size(); ++i)
-        print(std::to_string(i + 1).append(") ").append(m_items[i].name));
+    return selectedOption == m_items.size();
+}
+
+bool CppMenu::Menu::isUserQuitting() const
+{
+    try 
+    {
+        std::cout << "Do you want to exit? (y/n): ";
+        return CppSafeIO::parseYesNoInput();
+    }
+    catch (const std::exception& exception)
+    {
+        display();
+
+        print("An error happened handling your input.");
+        printBreak();
+        print(std::string{ "Error: " } + std::string{ exception.what() });
         
-    print(std::to_string(m_items.size() + 1).append(") ").append(m_exitMessage));
-    printBreak();
+        printBreak();
+        print("Please, try again.");
+        printBreak();
+    }
+
+    return isUserQuitting();
 }
 
 void CppMenu::CommonMenu::run() const
 {
-    display();
-    auto index{ getIndexFromUser() };
+    while (true)
+    {
+        display();
+        auto index{ getIndexFromUser() };
+
+        if (isQuitting(index))
+            if (isUserQuitting())
+                break;
+            else
+                continue;
+
+        m_items[index].function();
+        CppSafeIO::pressEnterToContinue();
+    }
 }
   
 void CppMenu::DisplayOnceMenu::run() const
