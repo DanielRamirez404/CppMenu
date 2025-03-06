@@ -12,10 +12,10 @@ CppMenu::Menu::Menu(const std::string& title, const Menu::Items& items, const st
     : m_title{ title }, m_items{ items }, m_exitMessage{ exitMessage } {}
 
 CppMenu::CommonMenu::CommonMenu(const std::string& title, const Menu::Items& items, bool isMainMenu) 
-    : CppMenu::Menu::Menu(title, items, (isMainMenu) ? "EXIT" : "GO BACK") {}
+    : CppMenu::Menu::Menu(title, items, (isMainMenu) ? "Exit" : "Go Back") {}
 
 CppMenu::DisplayOnceMenu::DisplayOnceMenu(const std::string& title, const Menu::Items& items) 
-    : CppMenu::Menu::Menu(title, items, "EXIT") {}
+    : CppMenu::Menu::Menu(title, items, "Exit") {}
 
 void CppMenu::Menu::setMaxWidth(std::size_t width)
 {
@@ -81,16 +81,16 @@ void CppMenu::Menu::display() const
     printBreak();
 }
 
-void CppMenu::Menu::displayWithInputError(const std::exception& exception) const
+void CppMenu::Menu::displayWithError(const std::exception& exception, const std::string& message) const
 {
     display();
 
-    print("An error happened handling your input.");
+    print(message);
     printBreak();
     print(std::string{ "Error: " } + std::string{ exception.what() });
     
     printBreak();
-    print("Please, try again.");
+    print("Please, try again");
     printBreak();
 }
 
@@ -103,7 +103,7 @@ std::size_t CppMenu::Menu::getIndexFromUser() const
             std::size_t index{ CppSafeIO::getInput<std::size_t>() };
             
             if (index == 0 || index > m_items.size() + 1 )
-                throw std::runtime_error{ "Invalid Index" };
+                throw std::runtime_error{ "Invalid index" };
 
             return --index;
         }
@@ -127,7 +127,23 @@ bool CppMenu::Menu::isQuitting(std::size_t selectedOption) const
 
 void CppMenu::Menu::executeItem(std::size_t index) const
 {
-    m_items[index].function();
+    try 
+    {
+        CppSafeIO::clearConsole();
+        m_items[index].function();
+        printBreak();
+    }
+    catch (const std::exception& exception)
+    {
+        displayWithError(exception, "The executed function terminated abruptly");
+    }
+}
+
+void CppMenu::Menu::pressEnterToContinue()
+{
+    print("Press enter to continue");
+    printBreak();
+    CppSafeIO::pressEnterToContinue();
 }
 
 void CppMenu::CommonMenu::run() const
@@ -143,7 +159,7 @@ void CppMenu::CommonMenu::run() const
                 continue;
 
         executeItem(index);
-        CppSafeIO::pressEnterToContinue();
+        pressEnterToContinue();
     }
 }
   

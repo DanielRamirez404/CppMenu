@@ -20,7 +20,8 @@ namespace CppMenu
             static void setMaxWidth(std::size_t width);
             static void print(const std::string& string);
             static void printBreak();
-            static void centerPrint(const std::string& string); 
+            static void centerPrint(const std::string& string);
+            static void pressEnterToContinue();
 
             using Items = std::vector<Function>;
 
@@ -47,7 +48,7 @@ namespace CppMenu
             
             void display() const;
             void printTitle() const;
-            void displayWithInputError(const std::exception& exception) const;
+            void displayWithError(const std::exception& exception, const std::string& message = "An error happened handling your input") const;
             
             template<typename T> T handleInput(std::function<T()> inputHandler) const;
     };
@@ -67,7 +68,7 @@ namespace CppMenu
             }
             catch (const std::exception& exception)
             {
-                displayWithInputError(exception);
+                displayWithError(exception);
             }
         }
         
