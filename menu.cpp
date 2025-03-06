@@ -120,16 +120,20 @@ bool CppMenu::Menu::isUserQuitting() const
     );
 }
 
-bool CppMenu::Menu::isQuitting(size_t selectedOption) const
+bool CppMenu::Menu::isQuitting(std::size_t selectedOption) const
 {
     return selectedOption == m_items.size();
+}
+
+void CppMenu::Menu::executeItem(std::size_t index) const
+{
+    m_items[index].function();
 }
 
 void CppMenu::CommonMenu::run() const
 {
     while (true)
     {
-        display();
         auto index{ getIndexFromUser() };
 
         if (isQuitting(index))
@@ -138,13 +142,12 @@ void CppMenu::CommonMenu::run() const
             else
                 continue;
 
-        m_items[index].function();
+        executeItem(index);
         CppSafeIO::pressEnterToContinue();
     }
 }
   
 void CppMenu::DisplayOnceMenu::run() const
 {
-    display();
     auto index{ getIndexFromUser() };
 }
