@@ -131,7 +131,6 @@ void CppMenu::Menu::executeItem(std::size_t index) const
     {
         CppSafeIO::clearConsole();
         m_items[index].function();
-        printBreak();
     }
     catch (const std::exception& exception)
     {
@@ -141,6 +140,7 @@ void CppMenu::Menu::executeItem(std::size_t index) const
 
 void CppMenu::Menu::pressEnterToContinue()
 {
+    printBreak();
     print("Press enter to continue");
     printBreak();
     CppSafeIO::pressEnterToContinue();
@@ -166,4 +166,10 @@ void CppMenu::CommonMenu::run() const
 void CppMenu::DisplayOnceMenu::run() const
 {
     auto index{ getIndexFromUser() };
+    
+    if (isQuitting(index))
+        return;
+
+    executeItem(index);
+    pressEnterToContinue();
 }
