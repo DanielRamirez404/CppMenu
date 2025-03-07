@@ -17,10 +17,11 @@ namespace CppMenu
     {
         public:
         
-            struct Function
+            struct Item
             {
                 std::string name{};
                 std::function<void()> function{};
+                bool haltOnDone{ true };
             };
             
             friend void CppMenu::setMaxWidth(std::size_t width);
@@ -28,7 +29,7 @@ namespace CppMenu
             friend void CppMenu::printBreak();
             friend void CppMenu::centerPrint(const std::string& string);
 
-            using Items = std::vector<Function>;
+            using Items = std::vector<Item>;
 
         protected:
 

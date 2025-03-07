@@ -127,21 +127,26 @@ bool CppMenu::Menu::isQuitting(std::size_t selectedOption) const
 
 void CppMenu::Menu::executeItem(std::size_t index) const
 {
+    const Item& item{ m_items[index] };
+
     try 
     {
         CppSafeIO::clearConsole();
-        m_items[index].function();
+        item.function(); 
     }
     catch (const std::exception& exception)
     {
         displayWithError(exception, "The executed function terminated abruptly");
     }
+
+    if (item.haltOnDone)
+        pressEnterToContinue();
 }
 
 void CppMenu::pressEnterToContinue()
 {
     printBreak();
-    print("Press enter to continue");
+    centerPrint("Press enter to continue");
     printBreak();
     CppSafeIO::pressEnterToContinue();
 }
@@ -159,7 +164,6 @@ void CppMenu::CommonMenu::run() const
                 continue;
 
         executeItem(index);
-        pressEnterToContinue();
     }
 }
   
@@ -171,5 +175,4 @@ void CppMenu::DisplayOnceMenu::run() const
         return;
 
     executeItem(index);
-    pressEnterToContinue();
 }
