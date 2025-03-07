@@ -20,3 +20,4 @@ if(NOT DEFINED CPP_MENU)
 endif()
 
 add_subdirectory(src)
+target_link_libraries(${CPP_MENU} PUBLIC ${CPP_SAFE_IO})
