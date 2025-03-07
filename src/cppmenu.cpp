@@ -8,14 +8,8 @@
 
 std::size_t CppMenu::Menu::s_maxWidth = 50;
 
-CppMenu::Menu::Menu(const std::string& title, const Menu::Items& items, const std::string& exitMessage)
-    : m_title{ title }, m_items{ items }, m_exitMessage{ exitMessage } {}
-
-CppMenu::CommonMenu::CommonMenu(const std::string& title, const Menu::Items& items, bool isMainMenu) 
-    : CppMenu::Menu::Menu(title, items, (isMainMenu) ? "Exit" : "Go Back") {}
-
-CppMenu::DisplayOnceMenu::DisplayOnceMenu(const std::string& title, const Menu::Items& items) 
-    : CppMenu::Menu::Menu(title, items, "Exit") {}
+CppMenu::Menu::Menu(const std::string& title, const Menu::Items& items, bool isMainMenu)
+    : m_title{ title }, m_items{ items }, m_exitMessage{ (isMainMenu) ? "Exit" : "Go Back" } {}
 
 void CppMenu::setMaxWidth(std::size_t width)
 {

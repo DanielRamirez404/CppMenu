@@ -31,9 +31,10 @@ namespace CppMenu
 
             using Items = std::vector<Item>;
 
+            Menu(const std::string& title, const Items& items, bool isMainMenu = false);
+        
         protected:
 
-            Menu(const std::string& title, const Items& items, const std::string& exitMessage);
             Menu (const Menu&) = delete;
             Menu& operator=(const Menu&) = delete; 
             
@@ -84,14 +85,14 @@ namespace CppMenu
     class CommonMenu : public Menu 
     {
         public:
-            CommonMenu(const std::string& title, const Items& items, bool isMainMenu = false);
+            using Menu::Menu;
             void run() const;
     };
 
     class DisplayOnceMenu : public Menu 
     {
         public:
-            DisplayOnceMenu(const std::string& title, const Items& items);
+            using Menu::Menu;
             void run() const;
     };
 }
