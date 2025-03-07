@@ -17,37 +17,37 @@ CppMenu::CommonMenu::CommonMenu(const std::string& title, const Menu::Items& ite
 CppMenu::DisplayOnceMenu::DisplayOnceMenu(const std::string& title, const Menu::Items& items) 
     : CppMenu::Menu::Menu(title, items, "Exit") {}
 
-void CppMenu::Menu::setMaxWidth(std::size_t width)
+void CppMenu::setMaxWidth(std::size_t width)
 {
-    s_maxWidth = width;
+    Menu::s_maxWidth = width;
 }
 
-void CppMenu::Menu::print(const std::string& string) 
+void CppMenu::print(const std::string& string) 
 {
-    if (string.size() < s_maxWidth)
+    if (string.size() < Menu::s_maxWidth)
         std::cout << string << '\n';
     else 
     {
-        print(string.substr(0, s_maxWidth - 1));
-        print(string.substr(s_maxWidth - 1));
+        print(string.substr(0, Menu::s_maxWidth - 1));
+        print(string.substr(Menu::s_maxWidth - 1));
     }
 }
 
-void CppMenu::Menu::printBreak()
+void CppMenu::printBreak()
 {
-    for (std::size_t i{ 0 }; i < s_maxWidth; ++i)
+    for (std::size_t i{ 0 }; i < Menu::s_maxWidth; ++i)
         std::cout << '-';
 
     std::cout << '\n';
 }
 
-void CppMenu::Menu::centerPrint(const std::string& string)
+void CppMenu::centerPrint(const std::string& string)
 {
     const std::size_t stringSize { string.size() };
 
-    if (stringSize < s_maxWidth)
+    if (stringSize < Menu::s_maxWidth)
     {
-        const std::size_t halfWidth{ s_maxWidth / 2 };
+        const std::size_t halfWidth{ Menu::s_maxWidth / 2 };
         const std::size_t halfStringSize{ stringSize / 2 };
 
         for (std::size_t i{ 0 }; i < (halfWidth - halfStringSize); ++i)
@@ -57,8 +57,8 @@ void CppMenu::Menu::centerPrint(const std::string& string)
     }
     else
     {
-        centerPrint(string.substr(0, s_maxWidth - 1));
-        centerPrint(string.substr(s_maxWidth - 1));
+        centerPrint(string.substr(0, Menu::s_maxWidth - 1));
+        centerPrint(string.substr(Menu::s_maxWidth - 1));
     }
 }
 
@@ -138,7 +138,7 @@ void CppMenu::Menu::executeItem(std::size_t index) const
     }
 }
 
-void CppMenu::Menu::pressEnterToContinue()
+void CppMenu::pressEnterToContinue()
 {
     printBreak();
     print("Press enter to continue");

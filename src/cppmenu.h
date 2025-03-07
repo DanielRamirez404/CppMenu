@@ -7,6 +7,12 @@
 
 namespace CppMenu
 {
+    void setMaxWidth(std::size_t width);
+    void print(const std::string& string);
+    void printBreak();
+    void centerPrint(const std::string& string);
+    void pressEnterToContinue();
+    
     class Menu 
     {
         public:
@@ -17,11 +23,10 @@ namespace CppMenu
                 std::function<void()> function{};
             };
             
-            static void setMaxWidth(std::size_t width);
-            static void print(const std::string& string);
-            static void printBreak();
-            static void centerPrint(const std::string& string);
-            static void pressEnterToContinue();
+            friend void CppMenu::setMaxWidth(std::size_t width);
+            friend void CppMenu::print(const std::string& string);
+            friend void CppMenu::printBreak();
+            friend void CppMenu::centerPrint(const std::string& string);
 
             using Items = std::vector<Function>;
 
