@@ -68,7 +68,7 @@ target_link_libraries(YourExecutable ${CPP_MENU})
 
 ## How to use
 
-You only need to include the ```cppmenu.h``` header file. Henceforth, all of the library's functions and classes will be available inside of the ```CppMenu``` namespace, similarly to the ```std``` namespace of the ```C++ Standard Library```. Here's a simple example showcasing a program that uses a ```Cpp::Menu::CommonMenu``` object. 
+You only need to include the ```cppmenu.h``` header file. Henceforth, all of the library's functions and classes will be available inside of the ```CppMenu``` namespace, similarly to the ```std``` namespace of the ```C++ Standard Library```. To use a menu, you just initialize a ```Cpp::Menu::CommonMenu``` or ```Cpp::Menu::DisplayOnceMenu``` object and use the ```run()``` method. Here's a simple example showcasing a program that uses a ```Cpp::Menu::CommonMenu``` object: 
 
 > [!TIP]
 > You can also add the ```using namespace CppMenu;``` statement if you wish to use this library's functions and classes without needing to write the namespace, although that's usually considered a bad practice.
@@ -91,7 +91,6 @@ int main()
     {
         "SAMPLE MENU",
 
-        CppMenu::Menu::Items
         {
             { "Print Hello World", &printHelloWorld }
         },
@@ -124,7 +123,36 @@ int main()
 
 Both classes use the **same constructor** (it comes from a base class), which gets the title, the menu items and an optional boolean that changes the exit option's statement between "Exit" (if it's considered a mainMenu) and "Go Back" (if it isn't).
 
-Both have a public ```run()``` method which you can use to call your previously initialized menu, and enjoy its simplicity!
+The ```CppMenu::Menu::Items``` datatype is actually an alias for ```std::vector<CppMenu::Menu::Item>```, that is a list of the ```CppMenu::Menu::Item``` struct that consists in the following data, respectively: 
+
+```
+struct CppMenu::Menu::Item
+{
+    std::string name{};                 // identifies the function on the menu
+    std::function<void()> function{};   // stores the function to call it when it's selected on the menu
+    bool haltOnDone{ true };            // if set up, after calling the function, the program's execution will halt and wait for the user to input the enter key
+}
+```
+
+> [!IMPORTANT]
+> As you can notice, the valid functions that you can use with the ```function``` member variable must be non-returning, and have no arguments.
+
+> [!TIP]
+> If you need to use a function with arguments, you can just use ```std::bind```, whose documentation you can read ![here](https://en.cppreference.com/w/cpp/utility/functional/bind).
+
+> [!TIP]
+> When creating your menu's, instead of directly creating items objects you can use ```initializer lists``` and pass your arguments, like this:
+> ```
+> CppMenu::DisplayOnceMenu menu
+> {
+>     "TITLE",
+>     {                                                         // this is automatically recognized as the CppMenu::Menu::Items alias
+>         { "Function Title", &nonReturningFunction, false }    // this is automatically recognized as the CppMenu::Menu::Item struct 
+>     },
+> };
+> ```
+
+Both menu classes have a public ```run()``` method which you can use to call your previously initialized menu, and enjoy its simplicity!
 
 > [!NOTE]
 > If any of your functions throws an exception, it'll be safely caught, logged into the console and then the program's execution will be resumed. You can check this out in the ```tests``` subdirectory.
