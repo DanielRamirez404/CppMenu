@@ -140,7 +140,7 @@ void CppMenu::Menu::executeItem(std::size_t index) const
 void CppMenu::pressEnterToContinue()
 {
     printBreak();
-    centerPrint("Press enter to continue");
+    centerPrint("Press Enter to continue");
     printBreak();
     CppSafeIO::pressEnterToContinue();
 }
