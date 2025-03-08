@@ -123,7 +123,7 @@ int main()
 
 Both classes use the **same constructor** (it comes from a base class), which gets the title, the menu items and an optional boolean that changes the exit option's statement between "Exit" (if it's considered a mainMenu) and "Go Back" (if it isn't).
 
-The ```CppMenu::Menu::Items``` datatype is actually an alias for ```std::vector<CppMenu::Menu::Item>```, that is a list of the ```CppMenu::Menu::Item``` struct that consists in the following data, respectively: 
+The ```CppMenu::Menu::Items``` datatype is actually an alias for ```std::vector<CppMenu::Menu::Item>```, that is a "list" (dynamic array, in fact) of the ```CppMenu::Menu::Item``` struct that consists in the following data, respectively: 
 
 ```
 struct CppMenu::Menu::Item
