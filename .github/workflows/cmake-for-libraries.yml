@@ -1,0 +1,63 @@
+name: CMake CI for cross-platform libraries
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    strategy:
+      fail-fast: false
+      
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release]
+        c_compiler: [gcc, clang, cl]
+        include:
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+          - os: ubuntu-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+          - os: ubuntu-latest
+            c_compiler: clang
+            cpp_compiler: clang++
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
+          - os: ubuntu-latest
+            c_compiler: cl
+  
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set directory strings
+      id: directories
+      shell: bash
+      run: |
+        main_dir="${{ github.workspace }}"
+        echo "main-dir=$main_dir" >> "$GITHUB_OUTPUT"
+        echo "build-dir=$main_dir/build" >> "$GITHUB_OUTPUT"
+
+    - name: Configure CMake
+      run: >
+        cmake -B ${{ steps.directories.outputs.build-dir }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -S ${{ steps.directories.outputs.main-dir }}
+
+    - name: Build with CMake
+      run: cmake --build ${{ steps.directories.outputs.build-dir }} --config ${{ matrix.build_type }}
+
+    - name: Test with Ctest
+      working-directory: ${{ steps.directories.outputs.build-dir }}
+      run: ctest -V --build-config ${{ matrix.build_type }}
