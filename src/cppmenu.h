@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <exception>
+#include <utility>
 
 namespace CppMenu
 {
@@ -22,6 +23,9 @@ namespace CppMenu
                 std::string name{};
                 std::function<void()> function{};
                 bool haltOnDone{ true };
+
+                Item(std::string itemName, std::function<void()> itemFunction, bool shouldHaltOnDone = true) 
+                    : name{std::move(itemName)}, function{std::move(itemFunction)}, haltOnDone{shouldHaltOnDone} {}
             };
             
             friend void CppMenu::setMaxWidth(std::size_t width);
