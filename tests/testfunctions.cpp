@@ -31,7 +31,6 @@ void showSettings()
     {
         "SETTINGS",
 
-        CppMenu::Menu::Items
         {
             { "Change menu size", &changeMenuSize }
         }
