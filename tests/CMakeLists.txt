@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.14)
-project(Tests LANGUAGES CXX)
+include(CTest)
 
-add_executable(Tests tests.cpp testfunctions.cpp)
+add_executable(CppMenu-AutomatedTests automated-tests.cpp)
+target_link_libraries(CppMenu-AutomatedTests ${CPP_MENU})
+add_test(NAME CppMenu-Testing COMMAND CppMenu-AutomatedTests)
 
-get_filename_component(PARENT_DIR ../ ABSOLUTE)
-add_subdirectory(${PARENT_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/build/bin)
-
-target_include_directories(Tests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(Tests ${CPP_MENU})
+add_executable(CppMenu-Tests tests.cpp testfunctions.cpp)
+target_link_libraries(CppMenu-Tests ${CPP_MENU})
+target_include_directories(CppMenu-Tests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

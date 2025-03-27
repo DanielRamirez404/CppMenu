@@ -23,3 +23,4 @@ FetchContent_Declare( cppsafeio
 FetchContent_MakeAvailable(cppsafeio)
 
 add_subdirectory(src)
+add_subdirectory(tests)
