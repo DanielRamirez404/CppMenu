@@ -14,7 +14,7 @@ Have you ever built a simple ```C++``` CLI program and end up needing to write d
 > This library automatically fetches the ![CppSafeIO library](https://github.com/DanielRamirez404/CppSafeIO), since it's required to work. Thus, you don't have to directly include it.
 
 > [!TIP]
-> The simplest way to implement this library in your projects would be by fetching the library as a subdirectory of a given project's ```CMake``` script, and ultimately, make use of ```include_directory()``` to execute this directory's ```CMakeLists.txt```, which makes it possible to use ```target_link_libraries()``` with your executable and the ```CPP_SAFE_IO``` variable, as follows:
+> The simplest way to implement this library in your projects would be by fetching the library as a subdirectory of a given project's ```CMake``` script, and ultimately, make use of ```include_directory()``` to execute this directory's ```CMakeLists.txt```, which makes it possible to use ```target_link_libraries()``` with your executable and the ```CPP_MENU``` variable, as follows:
 
 Your project's directory structure:
 ```
@@ -34,9 +34,6 @@ target_link_libraries(YourExecutable ${CPP_MENU})
 ...
 ```
 
-> [!NOTE]
-> This approach is used by this project's ```tests``` directory.
-
 Nonetheless, I highly recommend making use of a second, cleaner approach where you don't have to directly include the library as one of your project's subdirectories:
 
 > [!IMPORTANT]
@@ -52,8 +49,8 @@ include(FetchContent)
 
 FetchContent_Declare( cppmenu
     GIT_REPOSITORY  https://github.com/DanielRamirez404/CppMenu.git
-    GIT_TAG         v1.0.0
-    GIT_SHALLOW     TRUE 
+    GIT_TAG         v2.0.0
+    GIT_SHALLOW     TRUE
 ) 
 
 FetchContent_MakeAvailable(cppmenu)
@@ -65,6 +62,12 @@ target_link_libraries(YourExecutable ${CPP_MENU})
 
 > [!NOTE]
 > You can optionally change the value of the ```CPP_MENU``` variable before the  ```FetchContent_MakeAvailable()``` call, if you wish so, since it won't be overwritten and it'll show up when building the project.
+
+> [!IMPORTANT]
+> If you want to use ```Windows```'s ```conio.h``` header file's functions in this library, you should set the ```INCLUDE_CONIO_FOR_IO``` option to ```ON```, since it's automatically off. You can try something like this on your project's main ```CMakeLists.txt```:
+>```
+> option(INCLUDE_CONIO_FOR_IO "Flag for including the conio.h header file" ON)
+> ```
 
 ## How to use
 
@@ -157,7 +160,17 @@ Both menu classes have a public ```run()``` method which you can use to call you
 > [!NOTE]
 > If any of your functions throws an exception, it'll be safely caught, logged into the console and then the program's execution will be resumed. You can check this out in the ```tests``` subdirectory.
 
-## Testing
+## Building & Testing
+
+You can also just build and test the library independently from your projects, here's an example using ```bash``` in the library's directory:
+
+```
+cmake -B build -DCMAKE_BUILD_TYPE=Release -S . && cmake --build build --config Release && cd build && ctest -V && cd .. 
+```
+
+As you can see, ```CMake``` is used to build the project and ```CTest``` to run the automated tests (the ```CppMenu-AutomatedTests``` and ```CppSafeIO-AutomatedTests``` executables)!
 
 > [!TIP]
-> You can test this library's functions in the ```tests``` subdirectory.
+> If you wish to test out this library's functions, you can run the ```CppMenu-Tests``` executable (same goes for the ```CppSafeIO``` library). If it doesn't throw any exceptions or show any anomalies while getting input or cleaning output, then it should be working properly.
+
+*Both of this library's tests' source code are available on the ```tests``` directory.*
