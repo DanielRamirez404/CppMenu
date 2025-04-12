@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/DanielRamirez404/CppMenu/discussions
+    about: Please ask and answer questions here.
+  - name: GitHub Issues
+    url: https://github.com/DanielRamirez404/CppMenu/issues
+    about: Please report bugs or share feature ideas here.
