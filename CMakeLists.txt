@@ -16,7 +16,7 @@ message(STATUS "Fetching the CppSafeIO library...")
 
 FetchContent_Declare( cppsafeio 
     GIT_REPOSITORY  https://github.com/DanielRamirez404/CppSafeIO.git 
-    GIT_TAG         v2.1.0
+    GIT_TAG         v2.1.1
     GIT_SHALLOW     TRUE 
 )
 
